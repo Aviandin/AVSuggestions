@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +40,7 @@
             line-height: 1.5;
         }
 
-        button, input {
+        button, input, select {
             font: inherit;
         }
 
@@ -154,6 +155,10 @@
             border-color: var(--accent);
         }
 
+        .search-container input::placeholder {
+            color: var(--muted);
+        }
+
         .search-icon {
             position: absolute;
             left: 15px;
@@ -170,6 +175,10 @@
             border-radius: 10px;
             padding: 0 13px;
             outline: none;
+        }
+
+        .sort-select:focus {
+            border-color: var(--accent);
         }
 
         /* SUGGESTION LIST */
@@ -215,6 +224,7 @@
             image-rendering: pixelated;
             background: #303043;
             object-fit: cover;
+            flex-shrink: 0;
         }
 
         .player-name {
@@ -270,6 +280,8 @@
             color: var(--muted);
             font-size: 13px;
             line-height: 1.7;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
         }
 
         .suggestion-footer {
@@ -283,7 +295,7 @@
             font-size: 11px;
         }
 
-        /* EMPTY STATE */
+        /* EMPTY / LOADING / ERROR STATES */
 
         .empty-state {
             text-align: center;
@@ -359,6 +371,8 @@
 
 <body>
 
+    <!-- HEADER -->
+
     <header>
         <div class="logo">
             <div class="logo-icon">A</div>
@@ -370,7 +384,12 @@
         </div>
     </header>
 
+
+    <!-- MAIN CONTENT -->
+
     <main>
+
+        <!-- HERO -->
 
         <section class="hero">
             <div class="hero-label">Community suggestions</div>
@@ -386,6 +405,9 @@
             </p>
         </section>
 
+
+        <!-- SEARCH AND SORT -->
+
         <section class="toolbar">
 
             <div class="search-container">
@@ -399,130 +421,30 @@
                 >
             </div>
 
-            <select class="sort-select" id="sortSelect"
-                    aria-label="Sort suggestions">
+            <select
+                class="sort-select"
+                id="sortSelect"
+                aria-label="Sort suggestions"
+            >
                 <option value="newest">Newest first</option>
                 <option value="oldest">Oldest first</option>
             </select>
 
         </section>
 
-        <section class="suggestion-list" id="suggestionList">
 
-            <!-- Example suggestions.
-                 These will eventually come from the backend. -->
+        <!-- SUGGESTIONS -->
 
-            <article class="suggestion" data-date="2026-11-23">
-
-                <div class="suggestion-top">
-                    <div class="player-info">
-                        <img
-                            class="player-head"
-                            src="https://mc-heads.net/avatar/Notch/38"
-                            alt="Notch's Minecraft head"
-                        >
-
-                        <div>
-                            <div class="player-name">Notch</div>
-                            <div class="suggestion-date">
-                                November 23, 2026
-                            </div>
-                        </div>
-                    </div>
-
-                    <span class="status status-new">New</span>
-                </div>
-
-                <h2>More customization options</h2>
-
-                <p class="suggestion-description">
-                    It would be great to have more customization
-                    options available throughout the platform.
-                </p>
-
-                <div class="suggestion-footer">
-                    <span>Suggestion #001</span>
-                    <span>Community</span>
-                </div>
-
-            </article>
-
-            <article class="suggestion" data-date="2026-11-22">
-
-                <div class="suggestion-top">
-                    <div class="player-info">
-                        <img
-                            class="player-head"
-                            src="https://mc-heads.net/avatar/Steve/38"
-                            alt="Steve's Minecraft head"
-                        >
-
-                        <div>
-                            <div class="player-name">Steve</div>
-                            <div class="suggestion-date">
-                                November 22, 2026
-                            </div>
-                        </div>
-                    </div>
-
-                    <span class="status status-review">
-                        Under Review
-                    </span>
-                </div>
-
-                <h2>Add more backpack slots</h2>
-
-                <p class="suggestion-description">
-                    It would be nice to have configurable
-                    backpack sizes, allowing players to store
-                    more items.
-                </p>
-
-                <div class="suggestion-footer">
-                    <span>Suggestion #002</span>
-                    <span>Community</span>
-                </div>
-
-            </article>
-
-            <article class="suggestion" data-date="2026-11-20">
-
-                <div class="suggestion-top">
-                    <div class="player-info">
-                        <img
-                            class="player-head"
-                            src="https://mc-heads.net/avatar/Alex/38"
-                            alt="Alex's Minecraft head"
-                        >
-
-                        <div>
-                            <div class="player-name">Alex</div>
-                            <div class="suggestion-date">
-                                November 20, 2026
-                            </div>
-                        </div>
-                    </div>
-
-                    <span class="status status-accepted">
-                        Accepted
-                    </span>
-                </div>
-
-                <h2>Improved configuration menu</h2>
-
-                <p class="suggestion-description">
-                    A cleaner configuration interface would
-                    make it easier to manage settings.
-                </p>
-
-                <div class="suggestion-footer">
-                    <span>Suggestion #003</span>
-                    <span>Community</span>
-                </div>
-
-            </article>
-
+        <section
+            class="suggestion-list"
+            id="suggestionList"
+            aria-live="polite"
+        >
+            <!-- Suggestions are loaded by script.js -->
         </section>
+
+
+        <!-- EMPTY STATE -->
 
         <section class="empty-state" id="emptyState">
             <h2>No suggestions found</h2>
@@ -530,6 +452,9 @@
         </section>
 
     </main>
+
+
+    <!-- FOOTER -->
 
     <footer>
         <div>
@@ -542,73 +467,10 @@
         </div>
     </footer>
 
-    <script>
-        const searchInput =
-            document.getElementById("searchInput");
 
-        const sortSelect =
-            document.getElementById("sortSelect");
+    <!-- JAVASCRIPT -->
 
-        const suggestionList =
-            document.getElementById("suggestionList");
-
-        const emptyState =
-            document.getElementById("emptyState");
-
-
-        function updateSuggestions() {
-            const search =
-                searchInput.value.toLowerCase().trim();
-
-            const sort =
-                sortSelect.value;
-
-            const suggestions = Array.from(
-                suggestionList.querySelectorAll(".suggestion")
-            );
-
-            suggestions.sort((a, b) => {
-                const dateA = new Date(a.dataset.date);
-                const dateB = new Date(b.dataset.date);
-
-                return sort === "newest"
-                    ? dateB - dateA
-                    : dateA - dateB;
-            });
-
-            let visibleCount = 0;
-
-            suggestions.forEach(suggestion => {
-                const text = suggestion.textContent.toLowerCase();
-
-                const matches = text.includes(search);
-
-                suggestion.style.display =
-                    matches ? "block" : "none";
-
-                if (matches) {
-                    visibleCount++;
-                }
-
-                suggestionList.appendChild(suggestion);
-            });
-
-            emptyState.style.display =
-                visibleCount === 0 ? "block" : "none";
-        }
-
-        searchInput.addEventListener(
-            "input",
-            updateSuggestions
-        );
-
-        sortSelect.addEventListener(
-            "change",
-            updateSuggestions
-        );
-
-        updateSuggestions();
-    </script>
+    <script src="script.js"></script>
 
 </body>
 </html>
